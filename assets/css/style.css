@@ -1,0 +1,350 @@
+/* ── RESET & TOKENS ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:   #C8102E;
+      --blue:  #003087;
+      --white: #FFFFFF;
+      --gold:  #C9A84C;
+      --gold2: #F5D87A;
+      --dark:  #0a0a12;
+      --bg:    #0d0d1a;
+      --card-radius: clamp(10px, 2vw, 18px);
+      --gap:   clamp(10px, 2vw, 24px);
+    }
+
+    body {
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+    }
+
+    /* ── NORWAY STRIPE ──────────────────────────────── */
+    .norway-stripe {
+      height: 7px;
+      background: linear-gradient(to right,
+        var(--red)  0%,   var(--red)  calc(50% - 21px),
+        var(--white)     calc(50% - 21px), var(--white)     calc(50% - 14px),
+        var(--blue) calc(50% - 14px), var(--blue) calc(50% + 14px),
+        var(--white)     calc(50% + 14px), var(--white)     calc(50% + 21px),
+        var(--red)  calc(50% + 21px), var(--red)  100%
+      );
+    }
+
+    /* ── HEADER ─────────────────────────────────────── */
+    header {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #8b0c1e 0%, var(--blue) 100%);
+    }
+    header::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('assets/img/bc.png') center / cover;
+      opacity: .07;
+      pointer-events: none;
+    }
+
+    .header-inner {
+      position: relative; z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: clamp(12px,3vw,24px) clamp(16px,4vw,48px);
+    }
+
+    .logo-wrap {
+      display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0;
+    }
+    .logo-wrap img.logo-nacoes {
+      height: clamp(44px,8vw,72px);
+      width: auto;
+      filter: brightness(0) invert(1);
+      object-fit: contain;
+    }
+
+    .header-center {
+      flex: 1;
+      text-align: center;
+      min-width: 180px;
+    }
+    .header-center h1 {
+      font-family: 'Caesar Dressing', cursive;
+      font-size: clamp(22px,5vw,62px);
+      line-height: 1.05;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.45);
+      letter-spacing: 2px;
+    }
+    .header-center .sub {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--gold);
+      font-size: clamp(11px,2vw,18px);
+      letter-spacing: 6px;
+      margin-top: 3px;
+    }
+
+    /* ── MAIN ───────────────────────────────────────── */
+    main {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: clamp(20px,4vw,56px) clamp(12px,3vw,40px) 60px;
+    }
+
+    /* ── SECTION LABEL ──────────────────────────────── */
+    .sec-label {
+      font-family: 'Bebas Neue', sans-serif;
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: 5px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sec-label::after {
+      content: ''; flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+    }
+
+    /* ── ALBUM GRID ─────────────────────────────────── */
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--gap);
+    }
+
+    .sticker-wide { aspect-ratio: 16/9; }
+    
+    .card-back-wide {
+      flex-direction: column;
+      gap: 14px; padding: 20px;
+      justify-content: center; 
+      align-items: center;
+    }
+
+    /* COMPORTAMENTO DO CARD DA TURMA NO GRID */
+    .item-turma {
+      grid-column: span 2; /* Ocupa duas colunas ao lado da Nafallyn */
+    }
+
+    /* ── STICKER CARD ───────────────────────────────── */
+    .card-wrap {
+      perspective: 900px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    .sticker {
+      position: relative;
+      border-radius: var(--card-radius);
+      aspect-ratio: 3/4;
+      transform-style: preserve-3d;
+      transition: transform .65s cubic-bezier(.4,0,.2,1),
+                  box-shadow .3s;
+      box-shadow: 0 6px 28px rgba(0,0,0,.55),
+                  0 0 0 1px rgba(255,255,255,.07);
+    }
+
+    /* Manter proporção horizontal apenas no sticker da turma */
+    .item-turma .sticker {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+
+    /* hover tilt */
+    .card-wrap:hover .sticker {
+      transform: translateY(-6px) rotateY(5deg) rotateX(-2deg);
+      box-shadow: 0 22px 54px rgba(0,0,0,.7),
+                  0 0 24px rgba(200,16,46,.25);
+    }
+    /* flipped */
+    .card-wrap.flipped .sticker { transform: rotateY(180deg); }
+
+    .card-front, .card-back {
+      position: absolute; inset: 0;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      backface-visibility: hidden;
+    }
+
+    /* FRONT */
+    .card-front img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+    .card-wrap:hover .card-front img { transform: scale(1.04); }
+
+    /* shine sweep */
+    .card-front::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(110deg,
+        transparent 35%,
+        rgba(255,255,255,.18) 50%,
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity .3s, transform .6s;
+      transform: translateX(-120%);
+    }
+    .card-wrap:hover .card-front::after {
+      opacity: 1;
+      transform: translateX(120%);
+    }
+
+    /* BACK */
+    .card-back {
+      background: linear-gradient(145deg, #001a50, #0d0d1a);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .card-back .flag-back {
+      width: 72px; height: auto;
+      border-radius: 5px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.5);
+    }
+    .card-back .bk-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(18px,3.5vw,26px);
+      letter-spacing: 3px;
+      text-align: center;
+    }
+    .card-back .bk-badge {
+      background: var(--red);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 4px;
+      padding: 5px 14px;
+      border-radius: 20px;
+    }
+    .card-back .bk-note {
+      color: var(--gold);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      margin-top: 6px;
+    }
+
+    /* GOLD / special card */
+    .card-wrap.gold .sticker {
+      box-shadow: 0 6px 28px rgba(201,168,76,.4),
+                  0 0 0 2px var(--gold);
+    }
+    .card-wrap.gold:hover .sticker {
+      box-shadow: 0 22px 54px rgba(201,168,76,.6),
+                  0 0 40px rgba(201,168,76,.35);
+    }
+    .card-wrap.gold .card-back {
+      background: linear-gradient(145deg, #3a2800, #1a1200);
+      border-color: var(--gold);
+    }
+
+    /* click ripple overlay */
+    .ripple-el {
+      position: absolute; inset: 0;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .ripple-el span {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      transform: scale(0);
+      animation: rippleAnim .55s ease-out forwards;
+      width: 200px; height: 200px;
+      margin-left: -100px; margin-top: -100px;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(6); opacity: 0; }
+    }
+
+    /* flip hint */
+    .hint {
+      text-align: center;
+      color: rgba(255,255,255,.3);
+      font-size: 10px;
+      letter-spacing: 3px;
+      font-family: 'Bebas Neue', sans-serif;
+      margin: 28px 0;
+    }
+
+    /* ── LIGHTBOX ───────────────────────────────────── */
+    #lb {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.92);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+      backdrop-filter: blur(10px);
+    }
+    #lb.open { opacity: 1; pointer-events: all; }
+
+    #lb img {
+      max-width: 90vw; max-height: 88vh;
+      border-radius: 12px;
+      object-fit: contain;
+      box-shadow: 0 0 80px rgba(200,16,46,.35);
+      transform: scale(.9);
+      transition: transform .3s;
+    }
+    #lb.open img { transform: scale(1); }
+
+    #lb-close {
+      position: absolute; top: 18px; right: 22px;
+      background: none; border: none;
+      color: #fff; font-size: 34px; cursor: pointer;
+      opacity: .7; line-height: 1;
+      transition: opacity .2s, transform .2s;
+    }
+    #lb-close:hover { opacity: 1; transform: rotate(90deg); }
+
+    #lb-cap {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px; letter-spacing: 4px;
+      background: rgba(0,0,0,.6);
+      padding: 7px 20px; border-radius: 8px;
+      white-space: nowrap;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 28px 20px;
+      color: rgba(255,255,255,.25);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px; letter-spacing: 4px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 860px) {
+      .album-grid { grid-template-columns: repeat(2, 1fr); }
+      .item-turma { grid-column: span 2; }
+      .header-inner { justify-content: center; }
+    }
+    @media (max-width: 600px) {
+      .album-grid { grid-template-columns: 1fr; }
+      .item-turma { grid-column: span 1; }
+      .item-turma .sticker { aspect-ratio: 16/9; }
+    }
